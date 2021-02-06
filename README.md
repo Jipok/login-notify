@@ -14,4 +14,5 @@ Configuration for sending notify to telegram at every login
 # Tips
 * To uninstall run `make uninstall`
 * You can also execute commands from the `Makefile` yourself, if you don't have make for some reason.
-* You can uncomment the second line in `login-notify.sh` so as not to receive messages about the session closing
+* You can uncomment 5th line in `login-notify.sh` so as not to receive messages about the session closing
+* By default, it does not notify about connections from the local network. See 4th line. 

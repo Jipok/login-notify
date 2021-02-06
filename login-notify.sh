@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 [[ "$PAM_SERVICE" = "cron" ]] && exit 0
+[[ "$PAM_RHOST" =~ "192.168." ]] && exit 0
 #[[ "$PAM_TYPE" = "close_session" ]] && exit 0
 
 apiToken='YOUR_BOT_TOKEN'
