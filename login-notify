@@ -1,6 +1,0 @@
-Name: Notification about all login events
-Default: yes
-Priority: 0
-Session-Type: Additional
-Session:
-        optional        pam_exec.so /usr/bin/login-notify.sh
