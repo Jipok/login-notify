@@ -2,6 +2,7 @@
 
 apiToken='YOUR_BOT_TOKEN'
 chatId='CHAT_ID_TO_SEND'
+ignoreSameIpTimeout=3600 # Seconds
 
 ## Installer mode
 if [[ -z "$PAM_USER" ]]; then
@@ -35,6 +36,21 @@ fi
 [[ "$PAM_SERVICE" = "cron" ]] && exit 0
 [[ "$PAM_RHOST" =~ "192.168." ]] && exit 0
 [[ "$PAM_TYPE" = "close_session" ]] && exit 0
+
+# Anti-spam: check if same IP connected recently
+TMP_FILE="/tmp/login-notify.last"
+if [[ -f "$TMP_FILE" ]]; then
+    read -r LAST_IP LAST_TIME < "$TMP_FILE"
+    NOW=$(date +%s)
+    TIME_DIFF=$((NOW - LAST_TIME))
+
+    if [[ "$PAM_RHOST" == "$LAST_IP" ]] && [[ "$TIME_DIFF" -lt "$ignoreSameIpTimeout" ]]; then
+        echo "$PAM_RHOST $NOW" > "$TMP_FILE"
+        exit 0
+    fi
+fi
+# Save current IP and timestamp
+echo "$PAM_RHOST $(date +%s)" > "$TMP_FILE"
 
 [[ $PAM_TYPE = "open_session" ]] && PAM_TYPE="Login"
 [[ $PAM_TYPE = "close_session" ]] && PAM_TYPE="Logout"
